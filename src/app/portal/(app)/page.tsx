@@ -26,7 +26,7 @@ export default function Dashboard() {
 
       <div className="kpis">
         <Kpi icono={<Users size={16} />} etiqueta="Interesados" valor={m.total} detalle="registrados en el proceso" />
-        <Kpi icono={<Target size={16} />} etiqueta="Postulantes" valor={m.postulantes} detalle="se inscribieron" />
+        <Kpi icono={<Target size={16} />} etiqueta="Postulantes" valor={m.postulantes} detalle={`se inscribieron · ${m.admitidos} admitidos`} />
         <Kpi icono={<TrendingUp size={16} />} etiqueta="Conversión" valor={`${m.conversion} %`} detalle={`${dif >= 0 ? '+' : ''}${dif} pts frente a la línea base (${LINEA_BASE} %)`} acento />
         <Kpi icono={<Clock size={16} />} etiqueta="Primera respuesta" valor={`${m.promResp} h`} detalle="tiempo promedio" />
       </div>

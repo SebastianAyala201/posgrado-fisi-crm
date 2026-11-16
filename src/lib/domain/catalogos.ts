@@ -17,10 +17,19 @@ export const ETAPAS: { id: EtapaId; nombre: string; color: string; descripcion: 
   { id: 'nuevo', nombre: 'Nuevo', color: '#64748B', descripcion: 'Se registró y aún no se le contacta' },
   { id: 'contactado', nombre: 'Contactado', color: '#2563EB', descripcion: 'Recibió brochure e información' },
   { id: 'seguimiento', nombre: 'En seguimiento', color: '#C2410C', descripcion: 'Conversación activa con un asesor' },
-  { id: 'documentos', nombre: 'Documentos', color: '#7C3AED', descripcion: 'Envió requisitos para postular' },
-  { id: 'postulante', nombre: 'Postulante', color: '#0F766E', descripcion: 'Se inscribió al proceso de admisión' },
-  { id: 'no_convertido', nombre: 'No convertido', color: '#9F1239', descripcion: 'No postula; el motivo queda registrado' },
+  { id: 'inscrito', nombre: 'Inscrito', color: '#7C3AED', descripcion: 'Se inscribió: ya es postulante' },
+  { id: 'examen', nombre: 'Examen', color: '#0E7490', descripcion: 'Rindió o rendirá la evaluación' },
+  { id: 'entrevista', nombre: 'Entrevista', color: '#0369A1', descripcion: 'Pasó a la entrevista' },
+  { id: 'admitido', nombre: 'Admitido', color: '#0F766E', descripcion: 'Ingresó al programa' },
+  { id: 'no_convertido', nombre: 'No convertido', color: '#9F1239', descripcion: 'Salió del proceso; el motivo queda registrado' },
 ];
+
+// Etapas en las que el interesado ya postuló (cuentan para la conversión)
+export const ETAPAS_POSTULANTE: EtapaId[] = ['inscrito', 'examen', 'entrevista', 'admitido'];
+// Etapas abiertas antes de postular (las que predice la IA)
+export const ETAPAS_PREVIAS: EtapaId[] = ['nuevo', 'contactado', 'seguimiento'];
+export const esPostulante = (e: EtapaId) => ETAPAS_POSTULANTE.includes(e);
+export const esCerrada = (e: EtapaId) => e === 'admitido' || e === 'no_convertido';
 
 export const MOTIVOS_NO_CONVERSION = [
   'Costo del programa',

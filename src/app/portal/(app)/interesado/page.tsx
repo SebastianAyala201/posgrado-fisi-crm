@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, BellRing, History, Mail, MessageCircle, Phone, ShieldCheck, Sparkles, StickyNote } from 'lucide-react';
 import { useStore } from '@/lib/store';
-import { TIPOS_INTERACCION, etapa, nombrePrograma } from '@/lib/domain/catalogos';
+import { TIPOS_INTERACCION, esCerrada, esPostulante, etapa, nombrePrograma } from '@/lib/domain/catalogos';
 import { requiereMotivo, transicionesPermitidas } from '@/lib/domain/embudo';
 import { predecir } from '@/lib/services/ia';
 import type { EtapaId, TipoInteraccion } from '@/lib/domain/tipos';
@@ -58,21 +58,21 @@ function Ficha() {
                   </button>
                 ))}
               </div>
-            ) : <p className="muted">Proceso cerrado: ya es postulante.</p>}
+            ) : <p className="muted">Proceso cerrado: fue admitido.</p>}
             {x.motivo && <p className="motivo">Motivo de no conversión: <b>{x.motivo}</b></p>}
           </section>
 
           <section className="card">
             <h2><BellRing size={18} /> Recordatorio</h2>
-            <input type="date" aria-label="Fecha del próximo seguimiento" value={x.recordatorio ? x.recordatorio.slice(0, 10) : ''} disabled={x.etapa === 'postulante' || x.etapa === 'no_convertido'}
+            <input type="date" aria-label="Fecha del próximo seguimiento" value={x.recordatorio ? x.recordatorio.slice(0, 10) : ''} disabled={esCerrada(x.etapa)}
               onChange={(e) => programarRecordatorio(x.id, e.target.value ? new Date(`${e.target.value}T09:00:00-05:00`).toISOString() : null)} />
             <p className="muted small">{x.recordatorio ? `Próximo seguimiento: ${fecha(x.recordatorio)}` : 'Sin seguimiento programado'}</p>
           </section>
 
           <section className="card card-ia">
             <h2><Sparkles size={18} /> Predicción IA</h2>
-            <Probabilidad p={pred.p} />
-            {pred.factores.length > 0 && (
+            {esPostulante(x.etapa) ? <p><b>Ya postuló.</b> La predicción se usa antes de la inscripción.</p> : <Probabilidad p={pred.p} />}
+            {!esPostulante(x.etapa) && pred.factores.length > 0 && (
               <ul className="factores-lista">
                 {pred.factores.map((f) => <li key={f.texto}><span className={f.efecto > 0 ? 'sube' : 'baja'}>{f.efecto > 0 ? '▲' : '▼'}</span>{f.texto}</li>)}
               </ul>

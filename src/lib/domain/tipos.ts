@@ -1,6 +1,6 @@
 // Tipos del dominio. Reflejan los modelos del backend (app `leads` de Django).
 
-export type EtapaId = 'nuevo' | 'contactado' | 'seguimiento' | 'documentos' | 'postulante' | 'no_convertido';
+export type EtapaId = 'nuevo' | 'contactado' | 'seguimiento' | 'inscrito' | 'examen' | 'entrevista' | 'admitido' | 'no_convertido';
 export type Canal = 'Facebook' | 'Instagram' | 'LinkedIn' | 'TikTok' | 'WhatsApp' | 'Web' | 'Referido';
 export type MedioContacto = 'correo' | 'whatsapp' | 'llamada';
 export type TipoInteraccion = 'WhatsApp' | 'Llamada' | 'Correo' | 'Nota interna';

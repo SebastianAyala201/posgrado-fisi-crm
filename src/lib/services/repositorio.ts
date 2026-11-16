@@ -15,7 +15,7 @@ export interface Repositorio {
   login(usuario: string, clave: string): Promise<Sesion>;
 }
 
-const CLAVE = 'crm-upg-v4';
+const CLAVE = 'crm-upg-v5';
 const espera = (ms = 120) => new Promise((r) => setTimeout(r, ms));
 
 class RepositorioLocal implements Repositorio {
@@ -74,7 +74,7 @@ class RepositorioLocal implements Repositorio {
       ...i,
       etapa,
       motivo: etapa === 'no_convertido' ? motivo! : null,
-      recordatorio: etapa === 'postulante' || etapa === 'no_convertido' ? null : i.recordatorio,
+      recordatorio: etapa === 'admitido' || etapa === 'no_convertido' ? null : i.recordatorio,
       historial: [{ de: i.etapa, a: etapa, fecha: new Date().toISOString(), autor: 'Mesa de admisión', motivo }, ...i.historial],
     }));
   }

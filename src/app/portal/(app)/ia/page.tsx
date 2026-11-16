@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, Bot, BrainCircuit, Gauge, Sparkles, Target, TrendingUp } from 'lucide-react';
 import { useStore } from '@/lib/store';
-import { nombrePrograma } from '@/lib/domain/catalogos';
+import { ETAPAS_PREVIAS, esPostulante, nombrePrograma } from '@/lib/domain/catalogos';
 import { predecir } from '@/lib/services/ia';
 import { LINEA_BASE } from '@/lib/metricas';
 import { BarrasColores } from '@/components/graficos';
@@ -13,9 +13,9 @@ export default function DashboardIA() {
   const { interesados } = useStore();
 
   const d = useMemo(() => {
-    const activos = interesados.filter((x) => x.etapa !== 'postulante' && x.etapa !== 'no_convertido')
+    const activos = interesados.filter((x) => ETAPAS_PREVIAS.includes(x.etapa))
       .map((x) => ({ x, ...predecir(x) })).sort((a, b) => b.p - a.p);
-    const postulantes = interesados.filter((x) => x.etapa === 'postulante').length;
+    const postulantes = interesados.filter((x) => esPostulante(x.etapa)).length;
     const esperados = activos.reduce((s, a) => s + a.p, 0);
     const proyeccion = interesados.length ? Math.round(((postulantes + esperados) / interesados.length) * 100) : 0;
     const actual = interesados.length ? Math.round((postulantes / interesados.length) * 100) : 0;
@@ -33,7 +33,7 @@ export default function DashboardIA() {
       </header>
 
       <div className="kpis">
-        <Kpi icono={<Gauge size={16} />} etiqueta="En proceso" valor={d.activos.length} detalle="interesados activos" />
+        <Kpi icono={<Gauge size={16} />} etiqueta="En proceso" valor={d.activos.length} detalle="aún no postulan" />
         <Kpi icono={<Target size={16} />} etiqueta="Postulantes esperados" valor={`+${d.esperados}`} detalle="según la probabilidad de cada uno" />
         <Kpi icono={<TrendingUp size={16} />} etiqueta="Conversión proyectada" valor={`${d.proyeccion} %`} detalle={`hoy ${d.actual} % · línea base ${LINEA_BASE} %`} acento />
         <Kpi icono={<AlertTriangle size={16} />} etiqueta="En riesgo" valor={d.riesgo.length} detalle="probabilidad menor a 10 %" />

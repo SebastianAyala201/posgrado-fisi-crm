@@ -5,7 +5,7 @@
 import { HOY } from '../data/mock';
 import type { Interesado } from '../domain/tipos';
 
-const BASE: Record<Interesado['etapa'], number> = { nuevo: 0.04, contactado: 0.06, seguimiento: 0.12, documentos: 0.42, postulante: 0.98, no_convertido: 0.02 };
+const BASE: Record<Interesado['etapa'], number> = { nuevo: 0.05, contactado: 0.09, seguimiento: 0.18, inscrito: 0.99, examen: 0.99, entrevista: 0.99, admitido: 0.99, no_convertido: 0.02 };
 
 export interface Prediccion { p: number; factores: { texto: string; efecto: number }[] }
 
@@ -20,7 +20,7 @@ export function predecir(x: Interesado, ahora = HOY): Prediccion {
   }
   const ref = x.ultimoContacto ?? x.creado;
   const diasSin = (ahora.getTime() - new Date(ref).getTime()) / 86_400_000;
-  if (!['postulante', 'no_convertido'].includes(x.etapa) && diasSin > 14) { factores.push({ texto: `${Math.round(diasSin)} días sin contacto`, efecto: -0.1 }); p -= 0.1; }
+  if (['nuevo', 'contactado', 'seguimiento'].includes(x.etapa) && diasSin > 14) { factores.push({ texto: `${Math.round(diasSin)} días sin contacto`, efecto: -0.1 }); p -= 0.1; }
   if (x.canal === 'LinkedIn' || x.canal === 'Referido') { factores.push({ texto: `Llegó por ${x.canal}`, efecto: 0.04 }); p += 0.04; }
   return { p: Math.max(0.01, Math.min(0.99, p)), factores };
 }
